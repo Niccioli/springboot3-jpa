@@ -1,5 +1,6 @@
 package com.niccioli.course;
 
+import com.niccioli.course.entities.OrderItem;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
