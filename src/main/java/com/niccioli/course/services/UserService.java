@@ -2,6 +2,7 @@ package com.niccioli.course.services;
 
 import com.niccioli.course.entities.User;
 import com.niccioli.course.repositories.UserRepository;
+import com.niccioli.course.services.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class UserService {
 
     public User findById(Long id){
          Optional<User> user = repository.findById(id);
-         return user.get();
+         return user.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public User insert(User user){
