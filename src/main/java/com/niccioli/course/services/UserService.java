@@ -2,8 +2,11 @@ package com.niccioli.course.services;
 
 import com.niccioli.course.entities.User;
 import com.niccioli.course.repositories.UserRepository;
+import com.niccioli.course.services.exceptions.DatabaseException;
 import com.niccioli.course.services.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +31,18 @@ public class UserService {
         return repository.save(user);
     }
 
-    public void delete(Long id){
-        repository.deleteById(id);
+    public void delete(Long id) {
+        try {
+            if (!repository.existsById(id)) {
+                System.out.println("Erro: Usuário não encontrado!");
+                throw new ResourceNotFoundException(id);
+            }
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(id);
+        } catch (DataIntegrityViolationException e){
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     public User update(Long id, User user){
